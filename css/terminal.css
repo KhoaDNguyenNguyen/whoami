@@ -1,0 +1,125 @@
+/* css/terminal.css */
+.terminal-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-xlarge);
+  cursor: text;
+  display: flex;
+  flex-direction: column;
+}
+
+.output-container {
+  width: 100%;
+  word-wrap: break-word;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-top: var(--spacing-small);
+}
+
+/* Prompt Elements */
+.prompt-string {
+  white-space: pre;
+  margin-right: var(--spacing-medium);
+  font-weight: 700;
+}
+
+.prompt-user { color: var(--color-blue); }
+.prompt-at { color: var(--color-foreground); }
+.prompt-host { color: var(--color-magenta); }
+.prompt-colon { color: var(--color-foreground); }
+.prompt-path { color: var(--color-cyan); }
+.prompt-dollar { color: var(--color-foreground); }
+
+/* Hidden Native Input */
+.command-input {
+  background: transparent;
+  border: none;
+  color: var(--color-foreground);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-base);
+  outline: none;
+  flex: 1;
+  caret-color: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* Custom Block Cursor */
+.terminal-cursor {
+  display: inline-block;
+  width: var(--cursor-width);
+  height: var(--font-size-base);
+  background-color: var(--color-foreground);
+  position: absolute;
+  left: 0;
+  animation: cursor-blink 1s step-end infinite;
+  pointer-events: none;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Output Line Formatting */
+.output-line {
+  margin-bottom: var(--spacing-small);
+  white-space: pre-wrap;
+}
+
+.output-line a {
+  color: var(--color-cyan);
+  text-decoration: none;
+}
+
+.output-line a:hover {
+  text-decoration: underline;
+}
+
+/* Utility Colors */
+.text-red { color: var(--color-red); }
+.text-green { color: var(--color-green); }
+.text-yellow { color: var(--color-yellow); }
+.text-blue { color: var(--color-blue); }
+.text-magenta { color: var(--color-magenta); }
+.text-cyan { color: var(--color-cyan); }
+
+/* System Info Layout (neofetch) */
+.system-info-container {
+  display: flex;
+  gap: var(--spacing-xlarge);
+  margin: var(--spacing-large) 0;
+}
+
+.system-info-logo {
+  color: var(--color-blue);
+  white-space: pre;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.system-info-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.system-info-header {
+  color: var(--color-blue);
+  font-weight: 700;
+}
+
+.system-info-key {
+  color: var(--color-cyan);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .system-info-container {
+    flex-direction: column;
+    gap: var(--spacing-large);
+  }
+}

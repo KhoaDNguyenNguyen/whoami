@@ -1,10 +1,6 @@
-// js/core/TerminalController.js
 import { CommandProcessor } from './CommandProcessor.js';
 import { AutoPresenter } from './AutoPresenter.js';
 
-/**
- * Controls the terminal UI, command history, and DOM manipulations.
- */
 export class TerminalController {
   constructor() {
     this.terminalElement = document.getElementById('terminal');
@@ -22,6 +18,7 @@ export class TerminalController {
 
     this.initializeEventListeners();
     this.printInitialGreeting();
+    this.updatePromptUI();
   }
 
   initializeEventListeners() {
@@ -31,14 +28,25 @@ export class TerminalController {
 
     this.inputElement.addEventListener('input', () => this.updateCursorPosition());
     this.inputElement.addEventListener('keyup', () => this.updateCursorPosition());
-
     this.inputElement.addEventListener('keydown', (event) => this.handleKeyboardInput(event));
   }
 
   printInitialGreeting() {
     this.inputElement.value = '';
     this.printLine('System initialized.', 'text-green');
-    this.printLine('Type "help" for a list of commands or execute "./intro.sh" to begin presentation sequence.\n', 'text-foreground');
+    this.printLine('run "./intro.sh" to begin presentation sequence.\n', 'text-foreground');
+    this.updateCursorPosition();
+  }
+
+  getPromptString() {
+    const path = this.commandProcessor.currentPath.length === 0 
+      ? '~' 
+      : '~/' + this.commandProcessor.currentPath.join('/');
+    return `<span class="prompt-string"><span class="prompt-user">khoa</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-colon">:</span><span class="prompt-path">${path}</span><span class="prompt-dollar">$</span></span>`;
+  }
+
+  updatePromptUI() {
+    this.promptElement.innerHTML = this.getPromptString();
     this.updateCursorPosition();
   }
 
@@ -92,22 +100,23 @@ executeCommand(commandText) {
       } else if (output) {
         this.printLine(output);
       }
+
+      // Tạo khoảng trống (spacer) ngăn cách giữa các block lệnh
+      if (output !== 'CLEAR_SIGNAL' && output !== 'AUTO_PRESENTATION_SIGNAL') {
+        const spacer = document.createElement('div');
+        spacer.style.height = '1.25rem'; 
+        this.outputElement.appendChild(spacer);
+      }
     }
     
+    this.updatePromptUI();
     this.scrollToBottom();
   }
 
   printPromptLine(commandText) {
     const lineElement = document.createElement('div');
     lineElement.className = 'output-line';
-    
-    const promptHTML = `
-      <span class="prompt-string">
-        <span class="prompt-user">khoa</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
-      </span>
-    `;
-    
-    lineElement.innerHTML = `${promptHTML} <span>${commandText}</span>`;
+    lineElement.innerHTML = `${this.getPromptString()} <span>${commandText}</span>`;
     this.outputElement.appendChild(lineElement);
   }
 
@@ -130,7 +139,6 @@ executeCommand(commandText) {
     document.body.removeChild(hiddenSpan);
     
     const promptWidth = this.promptElement.getBoundingClientRect().width;
-    // 8px represents the margin-right on the prompt
     this.cursorElement.style.left = `${promptWidth + textWidth + 8}px`; 
   }
 

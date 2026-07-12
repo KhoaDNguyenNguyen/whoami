@@ -36,4 +36,4 @@ Navigate to `http://localhost:8000`.
 To initiate the automated sequence during a presentation:
 1. Set browser to full screen (`F11`).
 2. Input `./intro.sh` and press `Enter`.
-3. The system will automatically execute a predefined command sequence to present the portfolio content.
+3. The system will automatically execute a predefined command sequence to present the portfolio content.1

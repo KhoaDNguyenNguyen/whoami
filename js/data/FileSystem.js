@@ -2,30 +2,30 @@
 
 /**
  * Represents the static file system available in the terminal.
- * Content is structured to feel like personal notes rather than a formal CV.
  */
 export const VirtualFileSystem = {
-  'about.txt': 'I enjoy understanding physical systems by building software and hardware.\n\nMy current interests include Bayesian inference, scientific computing,\nembedded Linux, and signal processing.\n\nI am particularly interested in work that connects theoretical physics\nwith engineering practice.',
-  
-  'interests.txt': 'Physics\n├── Experimental high-energy physics\n│   └── Neutrino & collider data analysis\n├── Computational methods\n│   ├── Bayesian parameter estimation\n│   └── Monte Carlo simulations\n└── Statistical data analysis\n    └── Model-independent error propagation\n\nEngineering\n├── Hardware & Embedded\n│   ├── Embedded Linux systems\n│   └── Hardware instrumentation\n└── Signal Processing\n    ├── Deterministic signal recovery\n    └── Digital filter design',
-  
-  'education.txt': 'Ho Chi Minh City University of Technology and Education\nElectronics Engineering\n2024 - 2028',
-  
+  'about': {
+    'profile.txt': '<span class="text-cyan">Nguyen Nguyen Dang Khoa</span>\n<span class="text-yellow">Electronics Engineering.</span>\n\nBuilding hardware instrumentation and writing statistical data analysis pipelines.',
+    'now.txt': '<span class="text-green">✔</span> Debugging baseband signal extraction in SDR.\n<span class="text-green">✔</span> Porting legacy Fortran physics models to Python.\n<span class="text-green">✔</span> Studying neutrino phenomenology.'
+  },
   'research': {
-    'computational_hadron_physics.md': 'Current research\nComputational hadron physics\n\nTopics:\n• Bayesian parameter estimation\n• Nested Sampling\n• Numerical modelling\n• Scientific Python'
+    'current_focus.txt': 'Bypassing LTI filter limitations using <span class="text-magenta">Bayesian parameter estimation</span> directly on complex baseband data.',
+    'lab_notes': {
+      'weak_signal_recovery.md': 'Standard FIR filters fail at <span class="text-red">SNR < 0</span> when signal and noise overlap.\n\nTreating the baseband data as an additive statistical model instead. Using <span class="text-yellow">Nested Sampling</span> to isolate the signal.\n\nProving to be more reliable than amplitude thresholding.',
+      'legacy_code.md': 'Integrating Covariant Confined Quark Model <span class="text-magenta">Fortran</span> routines with <span class="text-blue">Python</span> via <span class="text-cyan">f2py</span>.\n\nRequired this to run 16-dimensional parameter estimation with <span class="text-yellow">Dynesty</span>.'
+    }
   },
-  
   'projects': {
-    'te_data_system.md': 'Thermoelectric Data System\nScientific data management platform for thermoelectric materials research.',
-    
-    'bayesian_sdr.md': 'Bayesian SDR\nWeak signal recovery using probabilistic inference.',
-    
-    'linux_kernel_module.md': 'Linux Kernel Module\nFramebuffer telemetry overlay.'
+    'thermognosis': {},
+    'bayesian_sdr': {},
+    'embedded_linux': {}
   },
-  
-  'publications': {
-    'pr_d_2025.txt': 'A. Issadykov, M. A. Ivanov, N. N. Dang-Khoa, C-T. Tran, et al. (2025).\n"Revisiting radiative transitions of charmonium states in a covariant confined quark model."\nPhysical Review D, 112, 094041.'
+  'reading': {
+    'current.txt': '<span class="text-yellow">1.</span> Neutrino cross-sections\n<span class="text-yellow">2.</span> Reversible Jump MCMC implementations\n<span class="text-yellow">3.</span> High-speed ADC architectures',
+    'bookshelf.txt': '<span class="text-cyan">»</span> Information Theory, Inference and Learning Algorithms (MacKay)\n<span class="text-cyan">»</span> Practical Electronics for Inventors (Scherz)'
   },
-  
-  'intro.sh': '#!/bin/bash\n# Start interactive presentation mode.'
+  'vson': {
+    'why_vson.txt': 'Neutrino experiments are essentially massive <span class="text-magenta">DAQ</span> and <span class="text-magenta">signal processing</span> challenges.\n\nI understand the electronics and the statistics. I need to understand the physics to build the right tools.'
+  },
+  'intro.sh': '#!/bin/bash'
 };

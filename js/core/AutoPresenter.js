@@ -1,23 +1,25 @@
-// js/core/AutoPresenter.js
-
-/**
- * Manages the presentation mode, allowing manual step-by-step advancement
- * while maintaining the automated typing aesthetic.
- */
 export class AutoPresenter {
   constructor(terminalController) {
     this.terminalController = terminalController;
     
-    // Updated sequence focusing on the "living portfolio" philosophy.
     this.sequence = [
       'clear',
-      'whoami',
-      'neofetch',
-      'cat about.txt',
-      'cat interests.txt',
-      'now',
-      'clear',
-      'echo "Ready to learn and build. Nice to meet everyone!"'
+      'pwd',
+      'tree',
+      'cat about/profile.txt',
+      'cat about/now.txt',  
+      'cd research',
+      'ls',
+      'cat current_focus.txt',
+      'cat lab_notes/weak_signal_recovery.md',
+      'cat lab_notes/legacy_code.md', 
+      'cd ../reading',
+      'ls',
+      'cat current.txt',
+      'cd ../vson',
+      'cat why_vson.txt',
+      'cd ~',
+      'clear'
     ];
     
     this.currentStep = 0;
@@ -32,6 +34,8 @@ export class AutoPresenter {
     this.isActive = true;
     this.currentStep = 0;
     
+    this.terminalController.commandProcessor.currentPath = [];
+    this.terminalController.updatePromptUI();
     this.terminalController.lockInput();
     
     this.terminalController.printLine('');
@@ -93,7 +97,11 @@ export class AutoPresenter {
     if (this.currentStep <= 0) return;
     
     this.currentStep--;
+    
+
     this.terminalController.outputElement.innerHTML = '';
+    this.terminalController.commandProcessor.currentPath = [];
+    this.terminalController.updatePromptUI();
     
     for (let i = 0; i < this.currentStep; i++) {
       this.terminalController.executeCommand(this.sequence[i]);

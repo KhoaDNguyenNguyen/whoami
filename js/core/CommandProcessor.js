@@ -1,12 +1,9 @@
-// js/core/CommandProcessor.js
 import { VirtualFileSystem } from '../data/FileSystem.js';
 
-/**
- * CommandProcessor evaluates user input and returns the appropriate string or HTML output.
- */
 export class CommandProcessor {
   constructor() {
     this.fileSystem = VirtualFileSystem;
+    this.currentPath = [];
   }
 
   process(rawCommand) {
@@ -19,145 +16,159 @@ export class CommandProcessor {
     switch (baseCommand) {
       case 'help':
         return this.executeHelp();
-      case 'whoami':
-        return 'Dang-Khoa N. Nguyen\n\nElectronics Engineering student.\nInterested in physics, computation, and embedded systems.';
-      case 'neofetch':
-        return this.executeNeofetch();
-      case 'now':
-        return this.executeNow();
-      case 'contact':
-        return this.executeContact();
+      case 'pwd':
+        return this.executePwd();
+      case 'cd':
+        return this.executeCd(parameters);
+      case 'tree':
+        return this.executeTree();
       case 'ls':
         return this.executeList(parameters);
       case 'cat':
         return this.executeConcatenate(parameters);
-      case 'echo':
-        return this.executeEcho(parameters);
       case 'clear':
         return 'CLEAR_SIGNAL';
       case './intro.sh':
-      case 'bash intro.sh':
+      case 'bash':
         return 'AUTO_PRESENTATION_SIGNAL';
       default:
         return `<span class="text-red">zsh: command not found: ${baseCommand}</span>`;
     }
   }
 
-  executeEcho(parameters) {
-    let text = parameters.join(' ');
-    if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
-      text = text.slice(1, -1);
+  getCurrentNode() {
+    let node = this.fileSystem;
+    for (const folder of this.currentPath) {
+      node = node[folder];
     }
-    return text;
+    return node;
   }
 
-  executeHelp() {
-    return [
-      'Available commands:',
-      '  whoami     - Print identity',
-      '  now        - What am I doing right now?',
-      '  neofetch   - Display system information',
-      '  ls         - List directory contents',
-      '  cat        - Print file content',
-      '  contact    - Display contact information',
-      '  echo       - Print text',
-      '  clear      - Clear the terminal screen',
-      '  <span class="text-green">./intro.sh</span> - Enter presentation mode'
-    ].join('\n');
+  resolveNode(pathString) {
+    if (!pathString || pathString === '~') return this.fileSystem;
+    let pathParts = [...this.currentPath];
+    
+    if (pathString.startsWith('/')) {
+      pathParts = [];
+      pathString = pathString.substring(1);
+    }
+
+    const segments = pathString.split('/').filter(Boolean);
+    for (const segment of segments) {
+      if (segment === '..') {
+        pathParts.pop();
+      } else if (segment !== '.') {
+        pathParts.push(segment);
+      }
+    }
+
+    let node = this.fileSystem;
+    for (const folder of pathParts) {
+      if (node[folder] === undefined || typeof node[folder] !== 'object') {
+        return null;
+      }
+      node = node[folder];
+    }
+    return node;
   }
 
-  executeNow() {
-    return [
-      'Currently',
-      '',
-      '• VSOP 2026 participant',
-      '• Undergraduate researcher',
-      '• Building a data system for thermoelectric materials'
-    ].join('\n');
+  executePwd() {
+    return '/home/khoa' + (this.currentPath.length > 0 ? '/' + this.currentPath.join('/') : '');
   }
 
-  executeContact() {
-    return [
-      'Email:          <a href="mailto:khoadnguyennguyen@gmail.com">khoadnguyennguyen@gmail.com</a>',
-      'GitHub:         <a href="https://github.com" target="_blank">github.com/dangkhoa</a>',
-      'Google Scholar: <a href="#" target="_blank">scholar.google.com</a>',
-      'CV:             <a href="#" target="_blank">dangkhoa.github.io/cv.pdf</a>'
-    ].join('\n');
+  executeCd(parameters) {
+    if (parameters.length === 0 || parameters[0] === '~') {
+      this.currentPath = [];
+      return '';
+    }
+
+    const target = parameters[0];
+    
+    if (target === '..') {
+      this.currentPath.pop();
+      return '';
+    }
+
+    const node = this.resolveNode(target);
+    if (node && typeof node === 'object') {
+      if (target.startsWith('/')) {
+        this.currentPath = target.split('/').filter(Boolean);
+      } else {
+        const segments = target.split('/').filter(Boolean);
+        for (const segment of segments) {
+          if (segment === '..') this.currentPath.pop();
+          else if (segment !== '.') this.currentPath.push(segment);
+        }
+      }
+      return '';
+    }
+
+    return `<span class="text-red">cd: no such file or directory: ${target}</span>`;
+  }
+
+  executeTree() {
+    const buildTree = (obj, prefix = '') => {
+      let result = '';
+      const keys = Object.keys(obj);
+      keys.forEach((key, index) => {
+        const isLast = index === keys.length - 1;
+        const pointer = isLast ? '└── ' : '├── ';
+        if (typeof obj[key] === 'object') {
+          result += `${prefix}${pointer}<span class="text-blue">${key}/</span>\n`;
+          result += buildTree(obj[key], prefix + (isLast ? '    ' : '│   '));
+        } else {
+          result += `${prefix}${pointer}${key}\n`;
+        }
+      });
+      return result;
+    };
+    return '.\n' + buildTree(this.getCurrentNode());
   }
 
   executeList(parameters) {
-    if (parameters.length === 0) {
-      return Object.keys(this.fileSystem).map(key => {
-        if (typeof this.fileSystem[key] === 'object') return `<span class="text-blue">${key}/</span>`;
+    const targetNode = parameters.length > 0 ? this.resolveNode(parameters[0]) : this.getCurrentNode();
+    
+    if (targetNode && typeof targetNode === 'object') {
+      return Object.keys(targetNode).map(key => {
+        if (typeof targetNode[key] === 'object') return `<span class="text-blue">${key}/</span>`;
         if (key.endsWith('.sh')) return `<span class="text-green">${key}</span>`;
         return key;
       }).join('  ');
-    }
-
-    const targetDirectory = parameters[0].replace(/\/$/, '');
-    if (this.fileSystem[targetDirectory] && typeof this.fileSystem[targetDirectory] === 'object') {
-      return Object.keys(this.fileSystem[targetDirectory]).map(key => key).join('  ');
     }
 
     return `<span class="text-red">ls: cannot access '${parameters[0]}': No such file or directory</span>`;
   }
 
   executeConcatenate(parameters) {
-    if (parameters.length === 0) {
-      return '<span class="text-red">cat: missing operand</span>';
-    }
+    if (parameters.length === 0) return '<span class="text-red">cat: missing operand</span>';
 
     const targetPath = parameters[0];
+    const pathParts = targetPath.split('/');
+    const fileName = pathParts.pop();
+    const dirString = pathParts.length > 0 ? pathParts.join('/') : '.';
     
-    if (this.fileSystem[targetPath]) {
-      if (typeof this.fileSystem[targetPath] === 'string') {
-        return this.fileSystem[targetPath];
+    const dirNode = this.resolveNode(dirString);
+
+    if (dirNode && dirNode[fileName] !== undefined) {
+      if (typeof dirNode[fileName] === 'string') {
+        return dirNode[fileName];
       }
       return `<span class="text-red">cat: ${targetPath}: Is a directory</span>`;
-    }
-
-    for (const [directoryKey, directoryContent] of Object.entries(this.fileSystem)) {
-      if (typeof directoryContent === 'object') {
-        if (targetPath.startsWith(directoryKey + '/')) {
-          const fileName = targetPath.split('/')[1];
-          if (directoryContent[fileName]) {
-            return directoryContent[fileName];
-          }
-        }
-      }
     }
 
     return `<span class="text-red">cat: ${targetPath}: No such file or directory</span>`;
   }
 
-  executeNeofetch() {
-    const archLogo = `
-       /\\
-      /  \\
-     /    \\
-    /      \\
-   /   ,,   \\
-  /   |  |   \\
- /_-''    ''-_\\`;
-
-    const colorBlocks = `
-      <span style="background-color: var(--color-black); color: var(--color-black);">███</span><span style="background-color: var(--color-red); color: var(--color-red);">███</span><span style="background-color: var(--color-green); color: var(--color-green);">███</span><span style="background-color: var(--color-yellow); color: var(--color-yellow);">███</span><span style="background-color: var(--color-blue); color: var(--color-blue);">███</span><span style="background-color: var(--color-magenta); color: var(--color-magenta);">███</span><span style="background-color: var(--color-cyan); color: var(--color-cyan);">███</span><span style="background-color: var(--color-foreground); color: var(--color-foreground);">███</span>
-    `;
-
-    return `
-<div class="system-info-container">
-  <div class="system-info-logo">${archLogo.replace(/\n/g, '<br>')}</div>
-  <div class="system-info-data">
-    <div><span class="system-info-header">khoa</span>@<span class="system-info-header">archlinux</span></div>
-    <div>-------------------</div>
-    <div><span class="system-info-key">OS:</span> Arch Linux x86_64</div>
-    <div><span class="system-info-key">WM:</span> Hyprland</div>
-    <div><span class="system-info-key">Shell:</span> zsh</div>
-    <div><span class="system-info-key">Editor:</span> Neovim</div>
-    <div><span class="system-info-key">Languages:</span> English / Vietnamese</div>
-    <br>
-    <div>${colorBlocks.trim()}</div>
-  </div>
-</div>`;
+  executeHelp() {
+    return [
+      'Available commands:',
+      '  pwd        - Print name of current/working directory',
+      '  cd         - Change the shell working directory',
+      '  ls         - List directory contents',
+      '  tree       - List contents of directories in a tree-like format',
+      '  cat        - Print file content',
+      '  clear      - Clear the terminal screen',
+      '  <span class="text-green">./intro.sh</span> - Enter presentation mode'
+    ].join('\n');
   }
 }

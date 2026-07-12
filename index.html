@@ -1,0 +1,33 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>khoa@portfolio:~</title>
+  <meta name="description" content="Technical portfolio of Dang-Khoa N. Nguyen">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/terminal.css">
+</head>
+<body>
+  <main id="terminal" class="terminal-container" tabindex="0">
+    <div id="output" class="output-container"></div>
+    
+    <div class="input-container">
+      <span id="prompt" class="prompt-string">
+        <span class="prompt-user">khoa</span><span class="prompt-at">@</span><span class="prompt-host">portfolio</span><span class="prompt-colon">:</span><span class="prompt-path">~</span><span class="prompt-dollar">$</span>
+      </span>
+      <input type="text" id="command-input" class="command-input" autocomplete="off" spellcheck="false" autofocus aria-label="Terminal input">
+      <span id="terminal-cursor" class="terminal-cursor" aria-hidden="true"></span>
+    </div>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

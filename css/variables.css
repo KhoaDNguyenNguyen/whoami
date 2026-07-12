@@ -1,0 +1,27 @@
+/* css/variables.css */
+:root {
+  /* Color Palette - Tokyo Night Inspired, restrained contrast */
+  --color-background: #1a1b26;
+  --color-foreground: #a9b1d6;
+  --color-black: #32344a;
+  --color-red: #f7768e;
+  --color-green: #9ece6a;
+  --color-yellow: #e0af68;
+  --color-blue: #7aa2f7;
+  --color-magenta: #ad8ee6;
+  --color-cyan: #449dab;
+  
+  /* Typography */
+  --font-mono: 'JetBrains Mono', Consolas, "Liberation Mono", monospace;
+  --font-size-base: 15px;
+  --line-height-base: 1.6;
+  
+  /* Spacing */
+  --spacing-small: 0.25rem;
+  --spacing-medium: 0.5rem;
+  --spacing-large: 1rem;
+  --spacing-xlarge: 1.5rem;
+  
+  /* Cursor */
+  --cursor-width: 8px;
+}

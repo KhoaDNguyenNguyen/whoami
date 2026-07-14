@@ -2,7 +2,7 @@ export class AutoPresenter {
   constructor(terminalController) {
     this.terminalController = terminalController;
     
-    this.sequence = [
+this.sequence = [
       'clear',
       'pwd',
       'tree',
@@ -10,12 +10,8 @@ export class AutoPresenter {
       'cat about/now.txt',  
       'cd research',
       'ls',
-      'cat current_focus.txt',
       'cat lab_notes/weak_signal_recovery.md',
       'cat lab_notes/legacy_code.md', 
-      'cd ../reading',
-      'ls',
-      'cat current.txt',
       'cd ../vson',
       'cat why_vson.txt',
       'cd ~',

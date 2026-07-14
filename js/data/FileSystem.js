@@ -5,7 +5,7 @@
  */
 export const VirtualFileSystem = {
   'about': {
-    'profile.txt': '<span class="text-cyan">Nguyen Nguyen Dang Khoa</span>\n<span class="text-yellow">Electronics Engineering.</span>\n\nBuilding hardware instrumentation and writing statistical data analysis pipelines.',
+    'profile.txt': '<span class="text-cyan">Nguyen Nguyen Dang Khoa</span>\n<span class="text-yellow">Electronics Engineering.</span>\n<span class="text-green">Ho Chi Minh City University of Technology and Engineering.</span>\n\nBuilding hardware instrumentation and writing statistical data analysis pipelines.\n\nHobby: Drinking coffee.',
     'now.txt': '<span class="text-green">✔</span> Debugging baseband signal extraction in SDR.\n<span class="text-green">✔</span> Porting legacy Fortran physics models to Python.\n<span class="text-green">✔</span> Studying neutrino phenomenology.'
   },
   'research': {
